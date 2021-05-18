@@ -1,3 +1,5 @@
+use util::{Address, IPAddr, MACAddr};
+
 use crate::{
     buffer::{self, Buffer},
     builder::{Builder as Build, Finalization},
@@ -36,18 +38,26 @@ impl Default for Builder<buffer::Dynamic> {
 
 impl<B: Buffer> Builder<B> {
     /// Create an arp request packet.
-    pub fn request(self) -> Result<operations::request::Builder<B>> {
-        let mut request = operations::request::Builder::with(self.buffer)?;
+    pub fn request<M, I>(self) -> Result<operations::request::Builder<M, I, B>>
+    where
+        M: Address + MACAddr,
+        I: Address + IPAddr,
+    {
+        let mut request = operations::request::Builder::<M, I, B>::with(self.buffer)?;
         request.finalizer().extend(self.finalizer);
 
         Ok(request)
     }
 
-    // Create an IPv6 packet.
-    // pub fn response(self) -> Result<v6::Builder<B>> {
-    //     let mut v6 = v6::Builder::with(self.buffer)?;
-    //     v6.finalizer().extend(self.finalizer);
+    /// Create an arp response packet.
+    pub fn response<M, I>(self) -> Result<operations::response::Builder<M, I, B>>
+    where
+        M: Address + MACAddr,
+        I: Address + IPAddr,
+    {
+        let mut request = operations::response::Builder::<M, I, B>::with(self.buffer)?;
+        request.finalizer().extend(self.finalizer);
 
-    //     Ok(v6)
-    // }
+        Ok(request)
+    }
 }
