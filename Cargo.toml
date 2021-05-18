@@ -15,3 +15,5 @@ thiserror = "1"
 bitflags  = "1"
 byteorder = "1"
 hwaddr    = "0.1"
+
+util = {version = "0.1.0", path = "/home/ah/router_os/routeros-develop/src/util"}
