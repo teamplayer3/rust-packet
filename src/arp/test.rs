@@ -80,4 +80,50 @@ mod test {
         assert_eq!(packet[18..24], dest_mac.octets());
         assert_eq!(packet[24..28], dest_ip.octets());
     }
+
+    #[test]
+    fn from_request_packet() {
+        use packet::Packet;
+        let bytes = [
+            0u8, 1, 8, 0, 6, 4, 0, 1, 35, 35, 37, 83, 35, 148, 192, 168, 1, 3, 0, 0, 0, 0, 0, 0,
+            192, 168, 1, 4,
+        ];
+
+        let source_mac = MacAddr::new(0x23, 0x23, 0x25, 0x53, 0x23, 0x94);
+        let source_ip = IPv4Addr::new(192, 168, 1, 3);
+        let to_find = IPv4Addr::new(192, 168, 1, 4);
+
+        let packet = Packet::<MacAddr, IPv4Addr, _>::unchecked(bytes);
+        assert_matches!(packet, Packet::Request(_));
+
+        if let Packet::Request(p) = packet {
+            assert_eq!(p.source_mac(), source_mac);
+            assert_eq!(p.source_ip(), source_ip);
+            assert_eq!(p.ip_to_find(), to_find);
+        }
+    }
+
+    #[test]
+    fn from_response_packet() {
+        use packet::Packet;
+        let bytes = [
+            0u8, 1, 8, 0, 6, 4, 0, 2, 35, 35, 37, 83, 35, 148, 192, 168, 1, 3, 135, 35, 37, 16, 35,
+            148, 192, 168, 1, 4,
+        ];
+
+        let source_mac = MacAddr::new(0x23, 0x23, 0x25, 0x53, 0x23, 0x94);
+        let source_ip = IPv4Addr::new(192, 168, 1, 3);
+        let dest_mac = MacAddr::new(0x87, 0x23, 0x25, 0x10, 0x23, 0x94);
+        let dest_ip = IPv4Addr::new(192, 168, 1, 4);
+
+        let packet = Packet::<MacAddr, IPv4Addr, _>::unchecked(bytes);
+        assert_matches!(packet, Packet::Response(_));
+
+        if let Packet::Response(p) = packet {
+            assert_eq!(p.source_mac(), source_mac);
+            assert_eq!(p.source_ip(), source_ip);
+            assert_eq!(p.destination_mac(), dest_mac);
+            assert_eq!(p.destination_ip(), dest_ip);
+        }
+    }
 }

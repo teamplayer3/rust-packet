@@ -4,10 +4,10 @@ use util::{Address, IPAddr, IPAddrType, MACAddr, MACAddrType};
 use crate::buffer::Buffer;
 use crate::error::*;
 
-const ARP_REQUEST: u16 = 0x0001;
-const ARP_RESPONSE: u16 = 0x0002;
+pub const ARP_REQUEST: u16 = 0x0001;
+pub const ARP_RESPONSE: u16 = 0x0002;
 
-#[allow(unreachable_patterns)]
+#[allow(unreachable_patterns, dead_code)]
 fn mac_addr_type_to_bytes(addr_type: MACAddrType) -> u16 {
     use MACAddrType::*;
     match addr_type {
@@ -16,7 +16,7 @@ fn mac_addr_type_to_bytes(addr_type: MACAddrType) -> u16 {
     }
 }
 
-#[allow(unreachable_patterns)]
+#[allow(unreachable_patterns, dead_code)]
 fn ip_addr_type_to_bytes(addr_type: IPAddrType) -> u16 {
     use IPAddrType::*;
     match addr_type {
@@ -25,6 +25,7 @@ fn ip_addr_type_to_bytes(addr_type: IPAddrType) -> u16 {
     }
 }
 
+#[allow(dead_code)]
 fn set_ip_addr_info<B, I>(buffer: &mut B, addr: &I, prev_addr_len: &mut usize) -> Result<()>
 where
     B: Buffer,
@@ -44,6 +45,7 @@ where
     Ok(())
 }
 
+#[allow(dead_code)]
 fn set_mac_addr_info<B, M>(buffer: &mut B, addr: &M, prev_addr_len: &mut usize) -> Result<()>
 where
     B: Buffer,
@@ -66,23 +68,27 @@ where
     Ok(())
 }
 
+#[allow(dead_code)]
 fn set_mac_addr_type<B: Buffer>(buffer: &mut B, addr_type: u16) -> Result<()> {
     std::io::Cursor::new(&mut buffer.data_mut()[..2])
         .write_u16::<BigEndian>(addr_type)
         .map_err(|e| e.into())
 }
 
+#[allow(dead_code)]
 fn set_ip_addr_type<B: Buffer>(buffer: &mut B, addr_type: u16) -> Result<()> {
     std::io::Cursor::new(&mut buffer.data_mut()[2..4])
         .write_u16::<BigEndian>(addr_type)
         .map_err(|e| e.into())
 }
 
+#[allow(dead_code)]
 fn set_ip_addr_len<B: Buffer>(buffer: &mut B, len: usize) {
     assert!(len <= 4, "IP address must have 4 or less octets.");
     buffer.data_mut()[5] = len as u8;
 }
 
+#[allow(dead_code)]
 fn set_mac_addr_len<B: Buffer>(buffer: &mut B, len: usize) {
     assert!(len <= 6, "MAC address must have 6 or less octets.");
     buffer.data_mut()[4] = len as u8;
