@@ -1,19 +1,19 @@
 #[cfg(test)]
 mod test {
-    use std::convert::TryInto;
+    use std::{convert::TryInto, net::Ipv4Addr};
 
     use super::super::*;
     use crate::error::*;
-    use util::{IPv4Addr, MacAddr};
+    use util::MacAddr;
 
     #[test]
     fn create_request_packet() {
         use crate::Builder;
         let buffer = crate::buffer::Dynamic::new();
 
-        let source_mac = MacAddr::new(0x23, 0x23, 0x25, 0x53, 0x23, 0x94);
-        let source_ip = IPv4Addr::new(192, 168, 1, 3);
-        let to_find = IPv4Addr::new(192, 168, 1, 4);
+        let source_mac = MacAddr::from([0x23, 0x23, 0x25, 0x53, 0x23, 0x94]);
+        let source_ip = Ipv4Addr::new(192, 168, 1, 3);
+        let to_find = Ipv4Addr::new(192, 168, 1, 4);
 
         let build_packet = || -> Result<Vec<u8>> {
             Ok(builder::Builder::with(buffer)?
@@ -48,10 +48,10 @@ mod test {
         use crate::Builder;
         let buffer = crate::buffer::Dynamic::new();
 
-        let source_mac = MacAddr::new(0x23, 0x23, 0x25, 0x53, 0x23, 0x94);
-        let source_ip = IPv4Addr::new(192, 168, 1, 3);
-        let dest_mac = MacAddr::new(0x87, 0x23, 0x25, 0x10, 0x23, 0x94);
-        let dest_ip = IPv4Addr::new(192, 168, 1, 4);
+        let source_mac = MacAddr::from([0x23, 0x23, 0x25, 0x53, 0x23, 0x94]);
+        let source_ip = Ipv4Addr::new(192, 168, 1, 3);
+        let dest_mac = MacAddr::from([0x87, 0x23, 0x25, 0x10, 0x23, 0x94]);
+        let dest_ip = Ipv4Addr::new(192, 168, 1, 4);
 
         let build_packet = || -> Result<Vec<u8>> {
             Ok(builder::Builder::with(buffer)?
@@ -89,11 +89,11 @@ mod test {
             192, 168, 1, 4,
         ];
 
-        let source_mac = MacAddr::new(0x23, 0x23, 0x25, 0x53, 0x23, 0x94);
-        let source_ip = IPv4Addr::new(192, 168, 1, 3);
-        let to_find = IPv4Addr::new(192, 168, 1, 4);
+        let source_mac = MacAddr::from([0x23, 0x23, 0x25, 0x53, 0x23, 0x94]);
+        let source_ip = Ipv4Addr::new(192, 168, 1, 3);
+        let to_find = Ipv4Addr::new(192, 168, 1, 4);
 
-        let packet = Packet::<MacAddr, IPv4Addr, _>::unchecked(bytes);
+        let packet = Packet::<MacAddr, Ipv4Addr, _>::unchecked(bytes);
         assert_matches!(packet, Packet::Request(_));
 
         if let Packet::Request(p) = packet {
@@ -111,12 +111,12 @@ mod test {
             148, 192, 168, 1, 4,
         ];
 
-        let source_mac = MacAddr::new(0x23, 0x23, 0x25, 0x53, 0x23, 0x94);
-        let source_ip = IPv4Addr::new(192, 168, 1, 3);
-        let dest_mac = MacAddr::new(0x87, 0x23, 0x25, 0x10, 0x23, 0x94);
-        let dest_ip = IPv4Addr::new(192, 168, 1, 4);
+        let source_mac = MacAddr::from([0x23, 0x23, 0x25, 0x53, 0x23, 0x94]);
+        let source_ip = Ipv4Addr::new(192, 168, 1, 3);
+        let dest_mac = MacAddr::from([0x87, 0x23, 0x25, 0x10, 0x23, 0x94]);
+        let dest_ip = Ipv4Addr::new(192, 168, 1, 4);
 
-        let packet = Packet::<MacAddr, IPv4Addr, _>::unchecked(bytes);
+        let packet = Packet::<MacAddr, Ipv4Addr, _>::unchecked(bytes);
         assert_matches!(packet, Packet::Response(_));
 
         if let Packet::Response(p) = packet {
