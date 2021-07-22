@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod test {
-    use std::{convert::TryInto, net::Ipv4Addr};
+    use std::{assert_matches, convert::TryInto, net::Ipv4Addr};
 
     use super::super::*;
     use crate::error::*;
