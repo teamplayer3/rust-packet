@@ -16,4 +16,4 @@ bitflags  = "1"
 byteorder = "1"
 hwaddr    = "0.1"
 
-util = {version = "0.1.0", path = "../util"}
+util = {version = "0.1.0", git = "https://gitlab.itd-services.de/studentenprojekte/router-os/routeros", branch = "develop", package = "util"}
